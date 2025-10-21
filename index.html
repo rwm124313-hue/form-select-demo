@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>資料選擇表單</title>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+  <h2>資料選擇表單</h2>
+  <form id="myForm">
+    <select id="sel1" class="mySelect"></select>
+    <select id="sel2" class="mySelect"></select>
+    <select id="sel3" class="mySelect"></select>
+    <select id="sel4" class="mySelect"></select>
+    <select id="sel5" class="mySelect"></select>
+    <select id="sel6" class="mySelect"></select>
+    <br><br>
+    <button type="submit">送出</button>
+  </form>
+
+  <script>
+  const apiUrl = 'https://script.google.com/a/macros/rwm.kh.edu.tw/s/AKfycbzysX5h7r-ltquniUcAtXZSKS_-jZfbkxuHgPSEBv9UG8T-RTnVuCC0mzOJLZvZsqkD/exec'; // 換成你的網址
+  let dataCache = [];
+
+  $(document).ready(function() {
+    // 載入資料
+    $.getJSON(apiUrl, function(data) {
+      dataCache = data;
+      $('.mySelect').each(function() {
+        $(this).select2({
+          data: data.map(item => ({ id: item.code, text: item.name })),
+          placeholder: "請選擇或輸入關鍵字",
+          allowClear: true
+        });
+      });
+    });
+
+    // 表單送出
+    $('#myForm').on('submit', function(e) {
+      e.preventDefault();
+      const postData = {
+        select1: $('#sel1').val(),
+        select2: $('#sel2').val(),
+        select3: $('#sel3').val(),
+        select4: $('#sel4').val(),
+        select5: $('#sel5').val(),
+        select6: $('#sel6').val(),
+      };
+      $.post(apiUrl, JSON.stringify(postData), function() {
+        alert("已送出！");
+      });
+    });
+  });
+  </script>
+</body>
+</html>
